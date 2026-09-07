@@ -114,54 +114,6 @@ flowchart LR
 
 ---
 
-## 🛠️ Tech Stack
-
-### Core Monorepo
-
-| Concern              | Technology          |
-| -------------------- | ------------------- |
-| Workspace manager    | npm workspaces      |
-| Runtime              | Node.js ≥ 22        |
-| Language             | TypeScript (strict) |
-| Linting / Formatting | ESLint · Prettier   |
-| Script runner        | `tsx`               |
-
-### 📱 Mobile (`apps/mobile`)
-
-| Concern              | Technology                                             |
-| -------------------- | ------------------------------------------------------ |
-| Framework            | Expo SDK 57 · React Native 0.86                        |
-| Navigation           | Expo Router (file-based)                               |
-| Styling              | NativeWind 4 (Tailwind CSS for RN)                     |
-| Animations           | Reanimated 4 · Gesture Handler                         |
-| Auth                 | `@clerk/expo` · `expo-auth-session`                    |
-| Video calls          | Stream Video RN SDK · `@stream-io/react-native-webrtc` |
-| Chat                 | Stream Chat Expo SDK                                   |
-| Media                | `expo-image-picker` · `expo-image-manipulator`         |
-| Storage              | `expo-secure-store` · `expo-file-system`               |
-| Monitoring           | `@sentry/react-native`                                 |
-| Build & Distribution | EAS Build → TestFlight / Google Play                   |
-
-### 🌐 Web (`apps/web`)
-
-| Concern      | Technology                         |
-| ------------ | ---------------------------------- |
-| Framework    | Next.js 16 (App Router)            |
-| UI           | React 19 · Tailwind CSS 4          |
-| Auth         | `@clerk/nextjs` (server + client)  |
-| ORM          | Drizzle ORM · Drizzle Kit          |
-| Database     | Neon Postgres (serverless driver)  |
-| Validation   | Zod 4 (every API route)            |
-| Scheduling   | `@date-fns/tz` (timezone-safe)     |
-| Chat + Video | Stream Chat · Stream Video         |
-| AI           | OpenAI `gpt-4o-mini`               |
-| Media        | ImageKit (private patient folders) |
-| Monitoring   | Sentry                             |
-| Testing      | Vitest                             |
-| Deployment   | Vercel                             |
-
----
-
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -228,24 +180,6 @@ npm run web               # → http://localhost:3000
 
 ---
 
-### Step 5 — Run the mobile app
-
-```bash
-cp apps/mobile/.env.example apps/mobile/.env
-```
-
-Set the following in `apps/mobile/.env`:
-
-| Variable                            | Purpose                                                   |
-| ----------------------------------- | --------------------------------------------------------- |
-| `EXPO_PUBLIC_API_URL`               | Web app URL (use your LAN IP for physical device testing) |
-| `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk client key for mobile                               |
-| `EXPO_PUBLIC_SENTRY_DSN`            | Mobile error tracking DSN                                 |
-
-> ⚠️ **Only `EXPO_PUBLIC_*` variables are safe here.** Expo inlines them into the JS bundle. Never put secrets in this file.
-
-Because Stream Video uses native WebRTC modules, the app requires a **development build** — not Expo Go:
-
 ```bash
 npm run mobile            # Start Metro bundler
 
@@ -257,16 +191,6 @@ npx expo run:android      # Android emulator or physical device
 npm run build:ios
 npm run build:android
 ```
-
----
-
-## 🚢 Deployment
-
-| Target      | Platform                     | Notes                                                       |
-| ----------- | ---------------------------- | ----------------------------------------------------------- |
-| **Web**     | [Vercel](https://vercel.com) | Dashboard, API routes, and webhooks deploy as a single unit |
-| **iOS**     | EAS Build → TestFlight       | Requires Apple Developer membership                         |
-| **Android** | EAS Build → Google Play      | Internal testing track recommended for staging              |
 
 ---
 

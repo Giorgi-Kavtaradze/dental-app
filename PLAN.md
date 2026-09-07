@@ -156,24 +156,81 @@ gets tests covering a spring-forward and a fall-back weekend.
 
 ### Architecture
 
-```
-Expo app ──Clerk session token──> Next.js Route Handlers ──Drizzle──> Neon Postgres
-   │                                      │
-   │                                      ├──> OpenAI (gpt-4o-mini)   AI assistant
-   │                                      ├──> Stream (server SDK)    call/chat tokens
-   │                                      ├──> ImageKit               upload + signed URLs
-   │                                      └──> Expo Push API          reminders
-   │
-   └──direct──> Stream Video / Stream Chat (client SDKs, server-issued tokens)
-                (ImageKit uploads go through the API, not direct — D19)
+The diagrams below mirror the code as it is written — helper names are the real ones
+from `apps/web/src/lib/auth.ts`.
 
-Webhooks IN:  Clerk user.created/updated/deleted → sync users table
-Vercel Cron:  */15 * * * *  →  /api/cron/reminders
+#### System diagram
+
+```mermaid
+flowchart TB
+    Mobile["📱 Mobile App — Expo SDK 57 / React Native"]
+    Web["🌐 Staff Dashboard — Next.js 16 App Router"]
+    Clerk["🔐 Clerk — Auth, Apple/Google SSO, roles"]
+    API["⚙️ /api/* — Route Handlers + Zod validation"]
+    Webhooks["🔔 /api/webhooks/clerk — user sync"]
+    AI["🤖 /api/ai — OpenAI gpt-4o-mini assistant"]
+    OpenAI["🧠 OpenAI — model call only, never PHI"]
+    Neon["🗄️ Neon Postgres — PHI data + audit_log"]
+    Stream["💬 Stream — Video WebRTC + Chat messages"]
+    ImageKit["🖼️ ImageKit — Private patient media CDN"]
+    Push["📲 Expo Push — appointment reminders"]
+    Cron["⏰ Vercel Cron — every 15 min"]
+    Sentry["📡 Sentry — Error tracking (both apps)"]
+
+    Mobile -->|"ClerkProvider, Apple/Google SSO"| Clerk
+    Mobile -->|"REST over HTTPS"| API
+    Mobile -->|"WebRTC + chat SDK"| Stream
+    Mobile --> Sentry
+    Web -->|"@clerk/nextjs middleware"| Clerk
+    Web -->|"Server Components + Server Actions\nDrizzle direct — no HTTP hop"| Neon
+    Web --> Sentry
+    API -->|"requireAuth() → userId, role"| Clerk
+    API -->|"Drizzle ORM queries"| Neon
+    API -->|"call/chat tokens, patient-{id} channel,\nappointment-{id} call room"| Stream
+    API -->|"proxied uploads (D19),\nsigned expiring URLs"| ImageKit
+    AI -->|"emergency keyword guard → model call\n(OPENAI_TRANSMISSION_APPROVED gate)"| OpenAI
+    AI -->|"threads persist"| Neon
+    Webhooks -->|"mirror users & roles"| Neon
+    Cron -->|"sweeps reminder_24h_sent_at /\nreminder_1h_sent_at for idempotency"| Neon
+    Cron -->|"generic-body pushes"| Push
+```
+
+#### One request, one booking
+
+```mermaid
+flowchart LR
+    R["Patient taps 'Book Appointment'"] --> Z["Zod validates request body"]
+    Z --> C["requireAuth() resolves userId + role"]
+    C --> A["Server computes real availability\nscheduling.ts availableSlots()"]
+    A --> X["Working hours − time-off − existing bookings\n15-min slots · 2-hour lead · CLINIC_TZ"]
+    X --> E["Postgres exclusion constraint\nblocks double-booking at DB level\nloser sees 'just taken, pick another'"]
+    E --> S["stream_call_id derived server-side\nappointment-{id} — never client-supplied (D9)"]
+    S --> L["audit_log records PHI write"]
+    L --> B["✅ Appointment confirmed"]
+```
+
+#### Why the server can't be abused
+
+```mermaid
+flowchart LR
+    Req["Incoming request\n(mobile or browser)"] --> Auth{"Clerk auth()"}
+    Auth -->|"unauthenticated"| Deny["❌ 401 Unauthorized"]
+    Auth -->|"authenticated"| Role{"Role gate\nrequireAuth() · requireStaff()"}
+    Role -->|"wrong role"| Forbidden["❌ 403 Forbidden"]
+    Role -->|"patient / staff / dentist"| Own{"Resource ownership\nrequireOwnedPatient(user, patientId)"}
+    Own -->|"not owner"| Forbidden2["❌ 404 Not Found\nexistence stays hidden"]
+    Own -->|"owner"| AI{"AI route?"}
+    AI -->|"yes"| Guard["Emergency-keyword guard\nruns before OpenAI call\nPatient photos never sent"]
+    AI -->|"no"| DB["Drizzle ORM → Neon Postgres"]
+    Guard --> DB
+    DB --> Audit["audit_log records every PHI read/write"]
+    Audit --> Resp["✅ Response"]
 ```
 
 Business logic lives in Route Handlers and `lib/`. The mobile app holds no business
-rules — it renders what the API returns. Staff dashboard uses Server Components and
-hits Drizzle directly, no HTTP hop.
+rules — it renders what the API returns. The staff dashboard uses Server Components
+and Server Actions and hits Drizzle directly, no HTTP hop. ImageKit uploads are
+proxied through the API, never direct-to-CDN with client signatures (D19).
 
 ### Third-party responsibilities
 

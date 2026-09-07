@@ -14,6 +14,7 @@ decisions change.
 - `apps/web` — Next.js 16. Staff dashboard **and** the API the mobile app calls
   **and** the webhook endpoints. One deploy. See `apps/web/AGENTS.md`.
 
+
 npm workspaces (not pnpm — see assumption A14). `npm install` at the root.
 
 ## Commands
