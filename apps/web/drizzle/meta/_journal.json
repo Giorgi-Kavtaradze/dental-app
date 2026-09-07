@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1788063127832,
+      "tag": "0000_oval_black_crow",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788158280247,
+      "tag": "0001_ai_message_image",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788178822282,
+      "tag": "0002_appointment_attachments",
+      "breakpoints": true
+    }
+  ]
+}

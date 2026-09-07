@@ -1,0 +1,45 @@
+# dependencies
+node_modules/
+
+# env
+.env
+.env*.local
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+.metro-health-check*
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+apps/mobile/ios/
+apps/mobile/android/
+
+# Sentry
+.sentryclirc
+
+# typescript
+*.tsbuildinfo
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+.stream/

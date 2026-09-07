@@ -1,0 +1,30 @@
+{
+  "name": "dental-app",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "mobile": "npm run start -w apps/mobile",
+    "build:ios": "npm run build:ios -w apps/mobile",
+    "build:android": "npm run build:android -w apps/mobile",
+    "web": "npm run dev -w apps/web",
+    "test": "npm run test -w apps/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "db:generate": "npm run db:generate -w apps/web",
+    "db:migrate": "npm run db:migrate -w apps/web",
+    "db:seed": "npm run db:seed -w apps/web",
+    "db:seed:stream": "npm run db:seed:stream -w apps/web",
+    "stream:check": "npm run stream:check -w apps/web",
+    "db:studio": "npm run db:studio -w apps/web"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^7.9.0"
+  }
+}
