@@ -12,6 +12,7 @@ web-build/
 expo-env.d.ts
 .metro-health-check*
 
+
 # Next.js
 .next/
 out/

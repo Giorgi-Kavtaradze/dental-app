@@ -1,6 +1,6 @@
-import * as Sentry from '@sentry/nextjs';
+import * as Sentry from "@sentry/nextjs";
 
-import { scrubQuery } from './src/lib/http';
+import { scrubQuery } from "./src/lib/http";
 
 // No DSN (dev, or a checkout without one) leaves the SDK disabled.
 Sentry.init({

@@ -15,33 +15,33 @@ Policy that open in an in-app browser from the mobile app.
 
 ## Pages
 
-| Route | Purpose |
-| --- | --- |
-| `/` | Public landing page |
-| `/terms`, `/privacy` | Legal pages (route group `(site)`; visible draft banner until signed off) |
-| `/sign-in`, `/sign-up` | Clerk authentication screens |
-| `/dashboard` | Day schedule across all dentists (staff-only via `requireStaff()`) |
-| `/dashboard/patients` | Patient directory |
+| Route                      | Purpose                                                                                         |
+| -------------------------- | ----------------------------------------------------------------------------------------------- |
+| `/`                        | Public landing page                                                                             |
+| `/terms`, `/privacy`       | Legal pages (route group `(site)`; visible draft banner until signed off)                       |
+| `/sign-in`, `/sign-up`     | Clerk authentication screens                                                                    |
+| `/dashboard`               | Day schedule across all dentists (staff-only via `requireStaff()`)                              |
+| `/dashboard/patients`      | Patient directory                                                                               |
 | `/dashboard/patients/[id]` | Patient record — intake, medical history, visit timeline, post-op notes, appointment completion |
-| `/dashboard/dentists` | Dentist profiles and management |
+| `/dashboard/dentists`      | Dentist profiles and management                                                                 |
 
 ## API endpoints
 
-| Endpoint | Purpose |
-| --- | --- |
-| `/api/me` | Current user and their patient profiles |
-| `/api/patients` · `/api/patients/[id]` | Patient list, detail, create/update (self + dependents) |
-| `/api/patients/[id]/medical-history` | The PHI table — every read/write hits `audit_log` |
-| `/api/services` | Bookable services |
-| `/api/dentists` | Active dentists and the services they offer |
-| `/api/availability` | Bookable slots — working hours minus time-off minus existing bookings |
+| Endpoint                                       | Purpose                                                                                                             |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `/api/me`                                      | Current user and their patient profiles                                                                             |
+| `/api/patients` · `/api/patients/[id]`         | Patient list, detail, create/update (self + dependents)                                                             |
+| `/api/patients/[id]/medical-history`           | The PHI table — every read/write hits `audit_log`                                                                   |
+| `/api/services`                                | Bookable services                                                                                                   |
+| `/api/dentists`                                | Active dentists and the services they offer                                                                         |
+| `/api/availability`                            | Bookable slots — working hours minus time-off minus existing bookings                                               |
 | `/api/appointments` · `/api/appointments/[id]` | Book, list, detail, cancel (duration computed server-side; the Postgres exclusion constraint blocks double-booking) |
-| `/api/appointments/[id]/attachments` | Upload to the patient's private ImageKit folder |
-| `/api/ai/chat` | Streaming assistant (`gpt-4o-mini`), persisted in `ai_conversations` / `ai_messages` |
-| `/api/ai/attachments` | Photo upload — blurred + full signed URLs; the image is never sent to OpenAI |
-| `/api/stream/token` | Stream user token with a server-derived user id |
-| `/api/stream/channel` | Ensure the `patient-{id}` channel exists with staff members synced |
-| `/api/webhooks/clerk` | Clerk user created/updated sync |
+| `/api/appointments/[id]/attachments`           | Upload to the patient's private ImageKit folder                                                                     |
+| `/api/ai/chat`                                 | Streaming assistant (`gpt-4o-mini`), persisted in `ai_conversations` / `ai_messages`                                |
+| `/api/ai/attachments`                          | Photo upload — blurred + full signed URLs; the image is never sent to OpenAI                                        |
+| `/api/stream/token`                            | Stream user token with a server-derived user id                                                                     |
+| `/api/stream/channel`                          | Ensure the `patient-{id}` channel exists with staff members synced                                                  |
+| `/api/webhooks/clerk`                          | Clerk user created/updated sync                                                                                     |
 
 ## Project structure
 
