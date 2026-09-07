@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
 /**
  * Web design system — the DentaCare recipe from apps/mobile/design/design-system.png.
@@ -8,24 +8,34 @@ import type { ReactNode } from 'react';
 
 export function Card({
   children,
-  className = '',
-  padding = 'p-6',
+  className = "",
+  padding = "p-6",
 }: {
   children: ReactNode;
   className?: string;
   padding?: string;
 }) {
-  return <section className={`card ${padding} ${className}`}>{children}</section>;
+  return (
+    <section className={`card ${padding} ${className}`}>{children}</section>
+  );
 }
 
 /** Card header: aqua-tinted rounded icon tile + title, as in the mockup. */
-export function CardTitle({ icon, children }: { icon: ReactNode; children: ReactNode }) {
+export function CardTitle({
+  icon,
+  children,
+}: {
+  icon: ReactNode;
+  children: ReactNode;
+}) {
   return (
     <header className="mb-5 flex items-center gap-3 border-b border-hairline pb-4">
       <span className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-powder text-aqua-ink">
         {icon}
       </span>
-      <h2 className="text-[19px] font-semibold tracking-tight text-navy">{children}</h2>
+      <h2 className="text-[19px] font-semibold tracking-tight text-navy">
+        {children}
+      </h2>
     </header>
   );
 }
@@ -53,11 +63,11 @@ export function StatTile({
 }
 
 const STATUS_TONES: Record<string, string> = {
-  booked: 'border-aqua/45 bg-aqua/10 text-aqua-ink',
-  completed: 'border-success/45 bg-success/10 text-[#1f9d78]',
-  cancelled: 'border-slate-300 bg-slate-100 text-slate-500',
-  no_show: 'border-coral/45 bg-coral/10 text-[#d8523f]',
-  video: 'border-[#9ecdf5] bg-[#e2effc] text-[#2c82d6]',
+  booked: "border-aqua/45 bg-aqua/10 text-aqua-ink",
+  completed: "border-success/45 bg-success/10 text-[#1f9d78]",
+  cancelled: "border-slate-300 bg-slate-100 text-slate-500",
+  no_show: "border-coral/45 bg-coral/10 text-[#d8523f]",
+  video: "border-[#9ecdf5] bg-[#e2effc] text-[#2c82d6]",
 };
 
 export function StatusPill({ status }: { status: string }) {
@@ -66,7 +76,7 @@ export function StatusPill({ status }: { status: string }) {
     <span
       className={`inline-flex items-center rounded-full border px-3 py-1 text-[12px] font-medium capitalize ${tone}`}
     >
-      {status.replace('_', ' ')}
+      {status.replace("_", " ")}
     </span>
   );
 }
@@ -84,7 +94,9 @@ export function Field({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div>
       <dt className="text-[13px] text-muted">{label}</dt>
-      <dd className="mt-1 whitespace-pre-wrap text-[15px] font-medium text-navy">{value || '—'}</dd>
+      <dd className="mt-1 whitespace-pre-wrap text-[15px] font-medium text-navy">
+        {value || "—"}
+      </dd>
     </div>
   );
 }
@@ -96,7 +108,7 @@ export function ToggleRow({ label, on }: { label: string; on: boolean }) {
       <span className="text-[14px] text-navy">{label}</span>
       <span
         className={`flex h-[26px] w-[46px] items-center rounded-full p-[3px] transition-colors ${
-          on ? 'btn-aqua justify-end' : 'justify-start bg-[#dce9f4]'
+          on ? "btn-aqua justify-end" : "justify-start bg-[#dce9f4]"
         }`}
       >
         <span className="h-5 w-5 rounded-full bg-white shadow-sm" />
@@ -106,7 +118,13 @@ export function ToggleRow({ label, on }: { label: string; on: boolean }) {
 }
 
 /** Anxiety level, drawn the way the mobile onboarding slider is. */
-export function LevelMeter({ value, max = 10 }: { value: number; max?: number }) {
+export function LevelMeter({
+  value,
+  max = 10,
+}: {
+  value: number;
+  max?: number;
+}) {
   const pct = Math.max(0, Math.min(100, (value / max) * 100));
   return (
     <div>
@@ -122,7 +140,9 @@ export function LevelMeter({ value, max = 10 }: { value: number; max?: number })
       </div>
       <div className="mt-2 flex justify-between text-[12px] text-muted">
         <span>Low</span>
-        <span className="font-medium text-aqua-ink">{value} / {max}</span>
+        <span className="font-medium text-aqua-ink">
+          {value} / {max}
+        </span>
         <span>High</span>
       </div>
     </div>
@@ -152,11 +172,11 @@ export function Avatar({
   size?: number;
 }) {
   const initials = name
-    .replace(/^Dr\.?\s+/i, '')
+    .replace(/^Dr\.?\s+/i, "")
     .split(/\s+/)
     .slice(0, 2)
-    .map((w) => w[0] ?? '')
-    .join('')
+    .map((w) => w[0] ?? "")
+    .join("")
     .toUpperCase();
 
   if (!src) {
@@ -171,7 +191,7 @@ export function Avatar({
   }
 
   const px = size * 2; // retina
-  const sep = src.includes('?') ? '&' : '?';
+  const sep = src.includes("?") ? "&" : "?";
 
   return (
     // eslint-disable-next-line @next/next/no-img-element

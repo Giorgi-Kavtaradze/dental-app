@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useActionState } from 'react';
+import { useActionState } from "react";
 
-import { addVisitNote } from './actions';
+import { addVisitNote } from "./actions";
 
 /** Post-op notes: what the patient reads at 11pm instead of phoning the clinic. */
 export function AddNoteForm({ appointmentId }: { appointmentId: string }) {
@@ -25,12 +25,12 @@ export function AddNoteForm({ appointmentId }: { appointmentId: string }) {
           disabled={pending}
           className="btn-aqua rounded-full px-4 py-2 text-[13px] font-semibold transition-transform active:scale-[0.98] disabled:opacity-50"
         >
-          {pending ? 'Saving…' : 'Add note'}
+          {pending ? "Saving…" : "Add note"}
         </button>
-        {state && 'error' in state && state.error && (
+        {state && "error" in state && state.error && (
           <span className="text-[12px] text-coral">{state.error}</span>
         )}
-        {state && 'ok' in state && state.ok && (
+        {state && "ok" in state && state.ok && (
           <span className="text-[12px] font-medium text-success">Saved</span>
         )}
       </div>

@@ -1,6 +1,6 @@
-import { requireAuth } from '@/lib/auth';
-import { json, route } from '@/lib/http';
-import { ensureClinicChannel, isStaff } from '@/lib/stream';
+import { requireAuth } from "@/lib/auth";
+import { json, route } from "@/lib/http";
+import { ensureClinicChannel, isStaff } from "@/lib/stream";
 
 /**
  * The patient's one conversation with the clinic (PLAN.md A9), created on

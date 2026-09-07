@@ -1,12 +1,12 @@
-import { clerkClient } from '@clerk/nextjs/server';
-import { asc, eq } from 'drizzle-orm';
+import { clerkClient } from "@clerk/nextjs/server";
+import { asc, eq } from "drizzle-orm";
 
-import { db } from '@/db';
-import { patients, users } from '@/db/schema';
-import { requireAuth } from '@/lib/auth';
-import { json, route } from '@/lib/http';
-import { attachmentFolder, imagekit, photoFolder } from '@/lib/imagekit';
-import { clinicChannelId, streamServer, streamUserId } from '@/lib/stream';
+import { db } from "@/db";
+import { patients, users } from "@/db/schema";
+import { requireAuth } from "@/lib/auth";
+import { json, route } from "@/lib/http";
+import { attachmentFolder, imagekit, photoFolder } from "@/lib/imagekit";
+import { clinicChannelId, streamServer, streamUserId } from "@/lib/stream";
 
 /**
  * The mobile app's first call. Tells it who it is and whether onboarding is
@@ -75,9 +75,12 @@ export const DELETE = route(async () => {
         .deleteFolder(folder)
         // 404 is the normal case for a patient who never uploaded anything.
         .catch((err: unknown) =>
-          console.error('[account] imagekit cleanup failed', err instanceof Error ? err.message : err)
-        )
-    )
+          console.error(
+            "[account] imagekit cleanup failed",
+            err instanceof Error ? err.message : err,
+          ),
+        ),
+    ),
   );
 
   // 1b. Stream holds the message bodies and the call records; our database
@@ -88,7 +91,7 @@ export const DELETE = route(async () => {
     if (family.length) {
       await stream.deleteChannels(
         family.map((p) => `messaging:${clinicChannelId(p.id)}`),
-        { hard_delete: true }
+        { hard_delete: true },
       );
     }
     await stream.deleteUser(streamUserId(user), {
@@ -96,7 +99,10 @@ export const DELETE = route(async () => {
       mark_messages_deleted: true,
     });
   } catch (err) {
-    console.error('[account] stream cleanup failed', err instanceof Error ? err.message : err);
+    console.error(
+      "[account] stream cleanup failed",
+      err instanceof Error ? err.message : err,
+    );
   }
 
   // 2. One delete. `users` is the root of every cascade in the schema, so this

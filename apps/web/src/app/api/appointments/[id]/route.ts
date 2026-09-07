@@ -1,14 +1,29 @@
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray } from "drizzle-orm";
 
-import { db } from '@/db';
-import { appointmentAttachments, appointments, dentists, patients, services, visitNotes } from '@/db/schema';
-import { requireAuth } from '@/lib/auth';
-import { signedAttachment } from '@/lib/imagekit';
-import { badRequest, conflict, forbidden, isExclusionViolation, json, notFound, route } from '@/lib/http';
-import { canCancel } from '@/lib/scheduling';
-import { serialize } from '@/lib/appointments';
-import { assertSlotBookable } from '@/lib/booking';
-import { patchAppointmentSchema } from '@/lib/validation';
+import { db } from "@/db";
+import {
+  appointmentAttachments,
+  appointments,
+  dentists,
+  patients,
+  services,
+  visitNotes,
+} from "@/db/schema";
+import { requireAuth } from "@/lib/auth";
+import { signedAttachment } from "@/lib/imagekit";
+import {
+  badRequest,
+  conflict,
+  forbidden,
+  isExclusionViolation,
+  json,
+  notFound,
+  route,
+} from "@/lib/http";
+import { canCancel } from "@/lib/scheduling";
+import { serialize } from "@/lib/appointments";
+import { assertSlotBookable } from "@/lib/booking";
+import { patchAppointmentSchema } from "@/lib/validation";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -18,12 +33,16 @@ async function loadOwned(userId: string, appointmentId: string) {
     .select({ id: patients.id })
     .from(patients)
     .where(eq(patients.accountUserId, userId));
-  if (family.length === 0) throw notFound('Appointment not found');
+  if (family.length === 0) throw notFound("Appointment not found");
 
   const [row] = await db
     .select({
       appointment: appointments,
-      patient: { id: patients.id, firstName: patients.firstName, lastName: patients.lastName },
+      patient: {
+        id: patients.id,
+        firstName: patients.firstName,
+        lastName: patients.lastName,
+      },
       dentist: {
         id: dentists.id,
         displayName: dentists.displayName,
@@ -46,11 +65,14 @@ async function loadOwned(userId: string, appointmentId: string) {
     .where(
       and(
         eq(appointments.id, appointmentId),
-        inArray(appointments.patientId, family.map((p) => p.id))
-      )
+        inArray(
+          appointments.patientId,
+          family.map((p) => p.id),
+        ),
+      ),
     );
 
-  if (!row) throw notFound('Appointment not found');
+  if (!row) throw notFound("Appointment not found");
   return row;
 }
 
@@ -73,8 +95,15 @@ export const GET = route(async (_req: Request, ctx: Ctx) => {
   return json({
     appointment: {
       ...serialize(row),
-      notes: notes.map((n) => ({ id: n.id, body: n.body, createdAt: n.createdAt.toISOString() })),
-      attachments: files.map((f) => ({ id: f.id, ...signedAttachment(f.path) })),
+      notes: notes.map((n) => ({
+        id: n.id,
+        body: n.body,
+        createdAt: n.createdAt.toISOString(),
+      })),
+      attachments: files.map((f) => ({
+        id: f.id,
+        ...signedAttachment(f.path),
+      })),
     },
   });
 });
@@ -88,24 +117,32 @@ export const PATCH = route(async (req: Request, ctx: Ctx) => {
   const row = await loadOwned(user.id, (await ctx.params).id);
   const body = patchAppointmentSchema.parse(await req.json());
 
-  if (row.appointment.status !== 'booked') {
+  if (row.appointment.status !== "booked") {
     throw badRequest(`This appointment is already ${row.appointment.status}`);
   }
   if (!canCancel(row.appointment.startsAt, new Date())) {
-    throw forbidden('Changes close 24 hours before an appointment. Please call the clinic.');
+    throw forbidden(
+      "Changes close 24 hours before an appointment. Please call the clinic.",
+    );
   }
 
-  if (body.action === 'cancel') {
+  if (body.action === "cancel") {
     const [updated] = await db
       .update(appointments)
-      .set({ status: 'cancelled', cancelledAt: new Date(), cancelledBy: user.id })
+      .set({
+        status: "cancelled",
+        cancelledAt: new Date(),
+        cancelledBy: user.id,
+      })
       .where(eq(appointments.id, row.appointment.id))
       .returning();
     return json({ appointment: serialize({ ...row, appointment: updated }) });
   }
 
   const startsAt = new Date(body.startsAt);
-  const endsAt = new Date(startsAt.getTime() + row.service.durationMinutes * 60_000);
+  const endsAt = new Date(
+    startsAt.getTime() + row.service.durationMinutes * 60_000,
+  );
   const dentistId = body.dentistId ?? row.appointment.dentistId;
 
   // Same guard as booking. Excluding this appointment stops it blocking itself.
@@ -120,11 +157,20 @@ export const PATCH = route(async (req: Request, ctx: Ctx) => {
   try {
     const [updated] = await db
       .update(appointments)
-      .set({ startsAt, endsAt, dentistId, reminder24hSentAt: null, reminder1hSentAt: null })
+      .set({
+        startsAt,
+        endsAt,
+        dentistId,
+        reminder24hSentAt: null,
+        reminder1hSentAt: null,
+      })
       .where(eq(appointments.id, row.appointment.id))
       .returning();
 
-    const [dentist] = await db.select().from(dentists).where(eq(dentists.id, dentistId));
+    const [dentist] = await db
+      .select()
+      .from(dentists)
+      .where(eq(dentists.id, dentistId));
     return json({
       appointment: serialize({
         ...row,
@@ -140,7 +186,10 @@ export const PATCH = route(async (req: Request, ctx: Ctx) => {
     });
   } catch (err) {
     if (isExclusionViolation(err)) {
-      throw conflict('That time was just taken. Please pick another.', 'slot_taken');
+      throw conflict(
+        "That time was just taken. Please pick another.",
+        "slot_taken",
+      );
     }
     throw err;
   }

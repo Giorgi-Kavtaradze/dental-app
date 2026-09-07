@@ -1,9 +1,9 @@
-import { asc, eq } from 'drizzle-orm';
+import { asc, eq } from "drizzle-orm";
 
-import { db } from '@/db';
-import { services } from '@/db/schema';
-import { requireAuth } from '@/lib/auth';
-import { json, route } from '@/lib/http';
+import { db } from "@/db";
+import { services } from "@/db/schema";
+import { requireAuth } from "@/lib/auth";
+import { json, route } from "@/lib/http";
 
 /** Drives the booking "reason" picker and onboarding step 3. */
 export const GET = route(async () => {

@@ -1,10 +1,10 @@
-import { asc, eq } from 'drizzle-orm';
+import { asc, eq } from "drizzle-orm";
 
-import { db } from '@/db';
-import { patients } from '@/db/schema';
-import { requireAuth, selfPatient } from '@/lib/auth';
-import { badRequest, json, route } from '@/lib/http';
-import { createPatientSchema } from '@/lib/validation';
+import { db } from "@/db";
+import { patients } from "@/db/schema";
+import { requireAuth, selfPatient } from "@/lib/auth";
+import { badRequest, json, route } from "@/lib/http";
+import { createPatientSchema } from "@/lib/validation";
 
 /** The account's whole family (PLAN.md phase 10). */
 export const GET = route(async () => {
@@ -26,7 +26,7 @@ export const POST = route(async (req: Request) => {
   const body = createPatientSchema.parse(await req.json());
 
   if (body.isSelf && (await selfPatient(user))) {
-    throw badRequest('This account already has a profile');
+    throw badRequest("This account already has a profile");
   }
 
   const [created] = await db

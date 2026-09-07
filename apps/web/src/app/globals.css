@@ -21,8 +21,9 @@
   --radius-card: 20px;
   --radius-tile: 16px;
 
-  --font-sans: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont,
-    "Inter", "Segoe UI", sans-serif;
+  --font-sans:
+    "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Inter",
+    "Segoe UI", sans-serif;
 }
 
 @layer base {
@@ -113,7 +114,7 @@
 
   /* Aqua bullet rather than a disc — matches the tile accents elsewhere. */
   & li::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 10px;
     left: 2px;

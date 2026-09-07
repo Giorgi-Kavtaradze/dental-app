@@ -1,10 +1,24 @@
-import { desc, eq, inArray } from 'drizzle-orm';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { desc, eq, inArray } from "drizzle-orm";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-import { ArrowLeftIcon, ClipboardIcon, ClockIcon, HeartPulseIcon } from '@/components/icons';
-import { Avatar, Card, CardTitle, Chip, EmptyState, Field, LevelMeter, ToggleRow } from '@/components/ui';
-import { db } from '@/db';
+import {
+  ArrowLeftIcon,
+  ClipboardIcon,
+  ClockIcon,
+  HeartPulseIcon,
+} from "@/components/icons";
+import {
+  Avatar,
+  Card,
+  CardTitle,
+  Chip,
+  EmptyState,
+  Field,
+  LevelMeter,
+  ToggleRow,
+} from "@/components/ui";
+import { db } from "@/db";
 import {
   appointmentAttachments,
   appointments,
@@ -14,16 +28,18 @@ import {
   services,
   users,
   visitNotes,
-} from '@/db/schema';
-import { audit } from '@/lib/audit';
-import { requireStaff } from '@/lib/auth';
-import { signedAttachment } from '@/lib/imagekit';
-import { formatClinicDate, formatClinicTime } from '@/lib/time';
+} from "@/db/schema";
+import { audit } from "@/lib/audit";
+import { requireStaff } from "@/lib/auth";
+import { signedAttachment } from "@/lib/imagekit";
+import { formatClinicDate, formatClinicTime } from "@/lib/time";
 
-import { AddNoteForm } from './add-note-form';
-import { CompleteButton } from './complete-button';
+import { AddNoteForm } from "./add-note-form";
+import { CompleteButton } from "./complete-button";
 
-export default async function PatientPage({ params }: PageProps<'/dashboard/patients/[id]'>) {
+export default async function PatientPage({
+  params,
+}: PageProps<"/dashboard/patients/[id]">) {
   const staff = await requireStaff();
   const { id } = await params;
 
@@ -31,12 +47,15 @@ export default async function PatientPage({ params }: PageProps<'/dashboard/pati
   if (!patient) notFound();
 
   // The account the patient belongs to — staff need a way to reach the family.
-  const [account] = await db.select().from(users).where(eq(users.id, patient.accountUserId));
+  const [account] = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, patient.accountUserId));
 
   // HIPAA posture: a staff read of a patient record and their medical history
   // is auditable, and this is the path that makes it so.
-  await audit(staff.id, 'read', 'patients', patient.id);
-  await audit(staff.id, 'read', 'medical_histories', patient.id);
+  await audit(staff.id, "read", "patients", patient.id);
+  await audit(staff.id, "read", "medical_histories", patient.id);
 
   const [history] = await db
     .select()
@@ -58,37 +77,44 @@ export default async function PatientPage({ params }: PageProps<'/dashboard/pati
     .where(eq(appointments.patientId, patient.id))
     .orderBy(desc(appointments.startsAt));
 
-  // Scoped to THIS patient's appointments — an unscoped select here would pull
-  // every patient's post-op notes into memory.
   const notes = visits.length
     ? await db
         .select()
         .from(visitNotes)
-        .where(inArray(visitNotes.appointmentId, visits.map((v) => v.id)))
+        .where(
+          inArray(
+            visitNotes.appointmentId,
+            visits.map((v) => v.id),
+          ),
+        )
         .orderBy(desc(visitNotes.createdAt))
     : [];
-  const notesFor = (appointmentId: string) => notes.filter((n) => n.appointmentId === appointmentId);
+  const notesFor = (appointmentId: string) =>
+    notes.filter((n) => n.appointmentId === appointmentId);
 
-  // What the patient sent ahead of the visit — X-rays, prescriptions, referral
-  // letters. Scoped to this patient's appointments for the same reason as the
-  // notes above. URLs are signed here and expire; the files are private.
   const files = visits.length
     ? await db
         .select()
         .from(appointmentAttachments)
-        .where(inArray(appointmentAttachments.appointmentId, visits.map((v) => v.id)))
+        .where(
+          inArray(
+            appointmentAttachments.appointmentId,
+            visits.map((v) => v.id),
+          ),
+        )
     : [];
   const filesFor = (appointmentId: string) =>
     files
       .filter((f) => f.appointmentId === appointmentId)
       .map((f) => ({ id: f.id, ...signedAttachment(f.path) }));
 
-  const initials = `${patient.firstName[0] ?? ''}${patient.lastName[0] ?? ''}`.toUpperCase();
+  const initials =
+    `${patient.firstName[0] ?? ""}${patient.lastName[0] ?? ""}`.toUpperCase();
   const meta = [
     patient.dateOfBirth && `DOB ${patient.dateOfBirth}`,
     patient.gender,
     patient.phone,
-    patient.isSelf ? 'Account holder' : 'Dependent',
+    patient.isSelf ? "Account holder" : "Dependent",
   ].filter(Boolean);
 
   return (
@@ -110,7 +136,7 @@ export default async function PatientPage({ params }: PageProps<'/dashboard/pati
           <h1 className="truncate text-[30px] font-bold tracking-tight text-navy">
             {patient.firstName} {patient.lastName}
           </h1>
-          <p className="mt-0.5 text-[14px] text-muted">{meta.join(' · ')}</p>
+          <p className="mt-0.5 text-[14px] text-muted">{meta.join(" · ")}</p>
         </div>
       </header>
 
@@ -121,7 +147,9 @@ export default async function PatientPage({ params }: PageProps<'/dashboard/pati
           <Field label="Heard about us" value={patient.referralSource} />
           <Field
             label="Last visit"
-            value={patient.lastVisitAt ? formatClinicDate(patient.lastVisitAt) : null}
+            value={
+              patient.lastVisitAt ? formatClinicDate(patient.lastVisitAt) : null
+            }
           />
           <Field label="Gender" value={patient.gender} />
           <Field label="Account email" value={account?.email} />
@@ -158,7 +186,9 @@ export default async function PatientPage({ params }: PageProps<'/dashboard/pati
             </div>
           </div>
         ) : (
-          <EmptyState>Not completed yet — the patient skipped it during onboarding.</EmptyState>
+          <EmptyState>
+            Not completed yet — the patient skipped it during onboarding.
+          </EmptyState>
         )}
       </Card>
 
@@ -186,9 +216,11 @@ export default async function PatientPage({ params }: PageProps<'/dashboard/pati
                   </span>
                   <span className="ml-auto flex items-center gap-3">
                     <span className="text-[12px] capitalize text-muted">
-                      {v.status.replace('_', ' ')}
+                      {v.status.replace("_", " ")}
                     </span>
-                    {v.status === 'booked' && <CompleteButton appointmentId={v.id} />}
+                    {v.status === "booked" && (
+                      <CompleteButton appointmentId={v.id} />
+                    )}
                   </span>
                 </div>
 

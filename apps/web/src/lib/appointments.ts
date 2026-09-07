@@ -1,7 +1,7 @@
-import { appointments } from '@/db/schema';
+import { appointments } from "@/db/schema";
 
-import { canCancel, canJoinCall } from './scheduling';
-import { formatClinicDate, formatClinicTime } from './time';
+import { canCancel, canJoinCall } from "./scheduling";
+import { formatClinicDate, formatClinicTime } from "./time";
 
 export type AppointmentRow = {
   appointment: typeof appointments.$inferSelect;
@@ -13,7 +13,13 @@ export type AppointmentRow = {
     specialty: string | null;
     photoUrl: string | null;
   } | null;
-  service: { id: string; key: string; name: string; durationMinutes: number; isTeleconsult: boolean } | null;
+  service: {
+    id: string;
+    key: string;
+    name: string;
+    durationMinutes: number;
+    isTeleconsult: boolean;
+  } | null;
 };
 
 /**
@@ -30,11 +36,11 @@ export function serialize(row: AppointmentRow) {
     status: a.status,
     isTeleconsult: row.service?.isTeleconsult ?? false,
     streamCallId: a.streamCallId,
-    canCancel: a.status === 'booked' && canCancel(a.startsAt, new Date()),
+    canCancel: a.status === "booked" && canCancel(a.startsAt, new Date()),
     // A7's join window, decided here for the same reason as `canCancel`: the
     // app renders a button, it doesn't own the rule.
     canJoin:
-      a.status === 'booked' &&
+      a.status === "booked" &&
       Boolean(row.service?.isTeleconsult) &&
       Boolean(a.streamCallId) &&
       canJoinCall(a.startsAt, new Date()),

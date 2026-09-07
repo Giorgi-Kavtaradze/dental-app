@@ -1,7 +1,7 @@
-import { TZDate } from '@date-fns/tz';
+import { TZDate } from "@date-fns/tz";
 
 /** Single clinic, single timezone (PLAN.md A1). */
-export const CLINIC_TZ = process.env.CLINIC_TZ ?? 'America/New_York';
+export const CLINIC_TZ = process.env.CLINIC_TZ ?? "America/New_York";
 
 export type CalendarDay = { year: number; month: number; day: number };
 
@@ -13,15 +13,28 @@ export function parseDay(iso: string): CalendarDay {
 }
 
 export function formatDay({ year, month, day }: CalendarDay): string {
-  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
 /**
  * A clinic-local wall-clock time → the UTC instant it actually happens at.
  * This is the only place the timezone is applied, so DST lives here alone.
  */
-export function clinicInstant(day: CalendarDay, hours: number, minutes: number): Date {
-  const t = new TZDate(day.year, day.month - 1, day.day, hours, minutes, 0, 0, CLINIC_TZ);
+export function clinicInstant(
+  day: CalendarDay,
+  hours: number,
+  minutes: number,
+): Date {
+  const t = new TZDate(
+    day.year,
+    day.month - 1,
+    day.day,
+    hours,
+    minutes,
+    0,
+    0,
+    CLINIC_TZ,
+  );
   return new Date(t.getTime());
 }
 
@@ -45,14 +58,27 @@ export function clinicDayOf(instant: Date): CalendarDay & { weekday: number } {
 
 /** Weekday of a clinic-local calendar day, 0 = Sunday. */
 export function weekdayOf(day: CalendarDay): number {
-  return new TZDate(day.year, day.month - 1, day.day, 12, 0, 0, 0, CLINIC_TZ).getDay();
+  return new TZDate(
+    day.year,
+    day.month - 1,
+    day.day,
+    12,
+    0,
+    0,
+    0,
+    CLINIC_TZ,
+  ).getDay();
 }
 
 /**
  * Inclusive range of clinic-local calendar days. Steps by calendar arithmetic,
  * not by adding 24h, so a DST day doesn't shift the sequence.
  */
-export function eachDay(from: CalendarDay, to: CalendarDay, maxDays = 62): CalendarDay[] {
+export function eachDay(
+  from: CalendarDay,
+  to: CalendarDay,
+  maxDays = 62,
+): CalendarDay[] {
   const days: CalendarDay[] = [];
   const cursor = new Date(Date.UTC(from.year, from.month - 1, from.day));
   const end = Date.UTC(to.year, to.month - 1, to.day);
@@ -69,20 +95,20 @@ export function eachDay(from: CalendarDay, to: CalendarDay, maxDays = 62): Calen
 
 /** Clinic-local "3:00 PM" for display in API responses the mobile app renders verbatim. */
 export function formatClinicTime(instant: Date): string {
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat("en-US", {
     timeZone: CLINIC_TZ,
-    hour: '2-digit',
-    minute: '2-digit',
+    hour: "2-digit",
+    minute: "2-digit",
     hour12: true,
   }).format(instant);
 }
 
 export function formatClinicDate(instant: Date): string {
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat("en-US", {
     timeZone: CLINIC_TZ,
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
   }).format(instant);
 }

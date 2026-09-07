@@ -1,12 +1,12 @@
-import { inArray } from 'drizzle-orm';
-import { StreamChat } from 'stream-chat';
+import { inArray } from "drizzle-orm";
+import { StreamChat } from "stream-chat";
 
-import { db } from '@/db';
-import { dentists, users } from '@/db/schema';
+import { db } from "@/db";
+import { dentists, users } from "@/db/schema";
 
-import type { AppUser } from './auth';
-import { selfPatient } from './auth';
-import { badRequest } from './http';
+import type { AppUser } from "./auth";
+import { selfPatient } from "./auth";
+import { badRequest } from "./http";
 
 /**
  * Stream owns call and message content only (PLAN.md § Third-party
@@ -31,7 +31,7 @@ let cached: StreamChat | null = null;
 
 export function streamServer(): StreamChat {
   if (!STREAM_API_KEY || !STREAM_API_SECRET) {
-    throw badRequest('Stream is not configured');
+    throw badRequest("Stream is not configured");
   }
   cached ??= StreamChat.getInstance(STREAM_API_KEY, STREAM_API_SECRET);
   return cached;
@@ -55,16 +55,20 @@ export function clinicChannelId(patientId: string): string {
   return `patient-${patientId}`;
 }
 
-export const isStaff = (role: AppUser['role']) => role === 'staff' || role === 'dentist';
+export const isStaff = (role: AppUser["role"]) =>
+  role === "staff" || role === "dentist";
 
 /** What a Stream user looks like to the other side of a conversation. */
 async function displayName(user: AppUser): Promise<string> {
   if (isStaff(user.role)) {
-    const [dentist] = await db.select().from(dentists).where(inArray(dentists.userId, [user.id]));
-    return dentist?.displayName ?? 'Clinic Team';
+    const [dentist] = await db
+      .select()
+      .from(dentists)
+      .where(inArray(dentists.userId, [user.id]));
+    return dentist?.displayName ?? "Clinic Team";
   }
   const self = await selfPatient(user);
-  return self ? `${self.firstName} ${self.lastName}` : 'Patient';
+  return self ? `${self.firstName} ${self.lastName}` : "Patient";
 }
 
 /** Stream rejects members that don't exist yet, so every id is upserted first. */
@@ -75,13 +79,16 @@ async function upsertParticipants(accountUsers: AppUser[]) {
       name: await displayName(u),
       // Read by the mobile app to label a caller as clinic vs patient.
       staff: isStaff(u.role),
-    }))
+    })),
   );
   await streamServer().upsertUsers(named);
 }
 
 async function staffUsers(): Promise<AppUser[]> {
-  return db.select().from(users).where(inArray(users.role, ['staff', 'dentist']));
+  return db
+    .select()
+    .from(users)
+    .where(inArray(users.role, ["staff", "dentist"]));
 }
 
 /** Sync the caller's Stream identity. Called on every token mint. */
@@ -99,18 +106,22 @@ export async function syncStreamUser(user: AppUser): Promise<string> {
  */
 export async function ensureClinicChannel(user: AppUser) {
   const self = await selfPatient(user);
-  if (!self) throw badRequest('Finish onboarding before messaging the clinic');
+  if (!self) throw badRequest("Finish onboarding before messaging the clinic");
 
   const staff = await staffUsers();
   await upsertParticipants([user, ...staff]);
 
   const memberIds = [streamUserId(user), ...staff.map(streamUserId)];
-  const channel = streamServer().channel('messaging', clinicChannelId(self.id), {
-    members: memberIds,
-    created_by_id: streamUserId(user),
-    // Staff see a shared inbox, so the channel has to name the patient.
-    name: `${self.firstName} ${self.lastName}`,
-  });
+  const channel = streamServer().channel(
+    "messaging",
+    clinicChannelId(self.id),
+    {
+      members: memberIds,
+      created_by_id: streamUserId(user),
+      // Staff see a shared inbox, so the channel has to name the patient.
+      name: `${self.firstName} ${self.lastName}`,
+    },
+  );
   await channel.create();
 
   // Staff hired after the channel was created are not members yet.

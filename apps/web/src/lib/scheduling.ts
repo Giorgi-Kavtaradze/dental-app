@@ -5,7 +5,7 @@ import {
   parseClockTime,
   weekdayOf,
   type CalendarDay,
-} from './time';
+} from "./time";
 
 /** PLAN.md A4 — both are constants, not config. */
 export const SLOT_GRANULARITY_MINUTES = 15;
@@ -48,7 +48,12 @@ export type AvailableSlotsInput = {
 };
 
 /** Half-open intervals: touching at an endpoint is not an overlap. */
-export function overlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date): boolean {
+export function overlaps(
+  aStart: Date,
+  aEnd: Date,
+  bStart: Date,
+  bEnd: Date,
+): boolean {
   return aStart.getTime() < bEnd.getTime() && bStart.getTime() < aEnd.getTime();
 }
 
@@ -106,7 +111,7 @@ export function availableSlots({
         const endsAt = new Date(t + duration);
 
         const blocked = dentistBusy.some((b) =>
-          overlaps(startsAt, endsAt, b.startsAt, b.endsAt)
+          overlaps(startsAt, endsAt, b.startsAt, b.endsAt),
         );
         if (blocked) continue;
 
@@ -116,13 +121,17 @@ export function availableSlots({
   }
 
   return slots.sort(
-    (a, b) => a.startsAt.getTime() - b.startsAt.getTime() || a.dentistId.localeCompare(b.dentistId)
+    (a, b) =>
+      a.startsAt.getTime() - b.startsAt.getTime() ||
+      a.dentistId.localeCompare(b.dentistId),
   );
 }
 
 /** Server-side rule. The client only hides the button; this decides. */
 export function canCancel(startsAt: Date, now: Date): boolean {
-  return startsAt.getTime() - now.getTime() >= CANCEL_CUTOFF_HOURS * 60 * MINUTE;
+  return (
+    startsAt.getTime() - now.getTime() >= CANCEL_CUTOFF_HOURS * 60 * MINUTE
+  );
 }
 
 /**
@@ -139,10 +148,13 @@ export function canCancel(startsAt: Date, now: Date): boolean {
  */
 export function canJoinCall(startsAt: Date, now: Date): boolean {
   const delta = now.getTime() - startsAt.getTime();
-  return delta >= -JOIN_OPENS_BEFORE_MINUTES * MINUTE && delta <= JOIN_CLOSES_AFTER_MINUTES * MINUTE;
+  return (
+    delta >= -JOIN_OPENS_BEFORE_MINUTES * MINUTE &&
+    delta <= JOIN_CLOSES_AFTER_MINUTES * MINUTE
+  );
 }
 
-export type SlotVerdict = 'ok' | 'taken' | 'invalid';
+export type SlotVerdict = "ok" | "taken" | "invalid";
 
 /**
  * Is this exact start time bookable?
@@ -170,12 +182,16 @@ export function classifySlot({
 }): SlotVerdict {
   const day = clinicDayOfInstant(startsAt);
   const matches = (slots: Slot[]) =>
-    slots.some((s) => s.dentistId === dentistId && s.startsAt.getTime() === startsAt.getTime());
+    slots.some(
+      (s) =>
+        s.dentistId === dentistId &&
+        s.startsAt.getTime() === startsAt.getTime(),
+    );
 
   const input = { workingHours, durationMinutes, from: day, to: day, now };
 
-  if (matches(availableSlots({ ...input, busy }))) return 'ok';
+  if (matches(availableSlots({ ...input, busy }))) return "ok";
   // Real slot, just occupied — worth a different message than "not a slot".
-  if (matches(availableSlots({ ...input, busy: [] }))) return 'taken';
-  return 'invalid';
+  if (matches(availableSlots({ ...input, busy: [] }))) return "taken";
+  return "invalid";
 }
