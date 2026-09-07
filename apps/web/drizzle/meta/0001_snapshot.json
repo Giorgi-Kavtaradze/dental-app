@@ -35,12 +35,8 @@
           "name": "ai_conversations_user_id_users_id_fk",
           "tableFrom": "ai_conversations",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -123,12 +119,8 @@
           "name": "ai_messages_conversation_id_ai_conversations_id_fk",
           "tableFrom": "ai_messages",
           "tableTo": "ai_conversations",
-          "columnsFrom": [
-            "conversation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["conversation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -275,12 +267,8 @@
           "name": "appointments_patient_id_patients_id_fk",
           "tableFrom": "appointments",
           "tableTo": "patients",
-          "columnsFrom": [
-            "patient_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["patient_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -288,12 +276,8 @@
           "name": "appointments_dentist_id_dentists_id_fk",
           "tableFrom": "appointments",
           "tableTo": "dentists",
-          "columnsFrom": [
-            "dentist_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["dentist_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
@@ -301,12 +285,8 @@
           "name": "appointments_service_id_services_id_fk",
           "tableFrom": "appointments",
           "tableTo": "services",
-          "columnsFrom": [
-            "service_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["service_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
@@ -314,12 +294,8 @@
           "name": "appointments_cancelled_by_users_id_fk",
           "tableFrom": "appointments",
           "tableTo": "users",
-          "columnsFrom": [
-            "cancelled_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["cancelled_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -401,12 +377,8 @@
           "name": "audit_log_actor_user_id_users_id_fk",
           "tableFrom": "audit_log",
           "tableTo": "users",
-          "columnsFrom": [
-            "actor_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["actor_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -440,12 +412,8 @@
           "name": "dentist_services_dentist_id_dentists_id_fk",
           "tableFrom": "dentist_services",
           "tableTo": "dentists",
-          "columnsFrom": [
-            "dentist_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["dentist_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -453,12 +421,8 @@
           "name": "dentist_services_service_id_services_id_fk",
           "tableFrom": "dentist_services",
           "tableTo": "services",
-          "columnsFrom": [
-            "service_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["service_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -466,10 +430,7 @@
       "compositePrimaryKeys": {
         "dentist_services_dentist_id_service_id_pk": {
           "name": "dentist_services_dentist_id_service_id_pk",
-          "columns": [
-            "dentist_id",
-            "service_id"
-          ]
+          "columns": ["dentist_id", "service_id"]
         }
       },
       "uniqueConstraints": {},
@@ -538,12 +499,8 @@
           "name": "dentists_user_id_users_id_fk",
           "tableFrom": "dentists",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -632,12 +589,8 @@
           "name": "medical_histories_patient_id_patients_id_fk",
           "tableFrom": "medical_histories",
           "tableTo": "patients",
-          "columnsFrom": [
-            "patient_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["patient_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -647,9 +600,7 @@
         "medical_histories_patient_id_unique": {
           "name": "medical_histories_patient_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "patient_id"
-          ]
+          "columns": ["patient_id"]
         }
       },
       "policies": {},
@@ -774,12 +725,8 @@
           "name": "patients_account_user_id_users_id_fk",
           "tableFrom": "patients",
           "tableTo": "users",
-          "columnsFrom": [
-            "account_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["account_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -847,9 +794,7 @@
         "services_key_unique": {
           "name": "services_key_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "key"
-          ]
+          "columns": ["key"]
         }
       },
       "policies": {},
@@ -920,12 +865,8 @@
           "name": "time_off_dentist_id_dentists_id_fk",
           "tableFrom": "time_off",
           "tableTo": "dentists",
-          "columnsFrom": [
-            "dentist_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["dentist_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -982,9 +923,7 @@
         "users_clerk_id_unique": {
           "name": "users_clerk_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "clerk_id"
-          ]
+          "columns": ["clerk_id"]
         }
       },
       "policies": {},
@@ -1034,12 +973,8 @@
           "name": "visit_notes_appointment_id_appointments_id_fk",
           "tableFrom": "visit_notes",
           "tableTo": "appointments",
-          "columnsFrom": [
-            "appointment_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["appointment_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1047,12 +982,8 @@
           "name": "visit_notes_created_by_users_id_fk",
           "tableFrom": "visit_notes",
           "tableTo": "users",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1127,12 +1058,8 @@
           "name": "working_hours_dentist_id_dentists_id_fk",
           "tableFrom": "working_hours",
           "tableTo": "dentists",
-          "columnsFrom": [
-            "dentist_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["dentist_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1148,29 +1075,17 @@
     "public.ai_role": {
       "name": "ai_role",
       "schema": "public",
-      "values": [
-        "user",
-        "assistant"
-      ]
+      "values": ["user", "assistant"]
     },
     "public.appointment_status": {
       "name": "appointment_status",
       "schema": "public",
-      "values": [
-        "booked",
-        "cancelled",
-        "completed",
-        "no_show"
-      ]
+      "values": ["booked", "cancelled", "completed", "no_show"]
     },
     "public.role": {
       "name": "role",
       "schema": "public",
-      "values": [
-        "patient",
-        "staff",
-        "dentist"
-      ]
+      "values": ["patient", "staff", "dentist"]
     }
   },
   "schemas": {},

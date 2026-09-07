@@ -20,15 +20,15 @@ passing `draft={false}` to `LegalPage` once an attorney has signed the text off.
 
 ## A. Assumptions made — correct any that are wrong
 
-| # | Assumption | Where it shows up |
-|---|---|---|
-| 1 | The operating entity is the dental practice itself, and it is the party contracting with patients. | Throughout; ToS §1, §20 |
-| 2 | Minimum age for an account holder is **18**. The code enforces no age check at all. | ToS §4, Privacy §14 |
-| 3 | Governing law is the state the clinic operates in. `CLINIC_TZ` defaults to `America/New_York`, so an eastern-US state is likely — but that is a default constant, not a business fact. | ToS §22 |
-| 4 | The Service is and remains **free**, and treatment fees are billed by the practice outside it. Confirmed by the absence of any billing code. | ToS §16, landing page hero |
-| 5 | Dependents are minors or others for whom the account holder is a parent, guardian, or authorised representative. | ToS §6, Privacy §14 |
-| 6 | The practice has, or will have, a separate **Notice of Privacy Practices**. Both pages defer to it for health information. | ToS §11, Privacy §1 |
-| 7 | Court jurisdiction rather than arbitration, absent instruction. | ToS §22 |
+| #   | Assumption                                                                                                                                                                             | Where it shows up          |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| 1   | The operating entity is the dental practice itself, and it is the party contracting with patients.                                                                                     | Throughout; ToS §1, §20    |
+| 2   | Minimum age for an account holder is **18**. The code enforces no age check at all.                                                                                                    | ToS §4, Privacy §14        |
+| 3   | Governing law is the state the clinic operates in. `CLINIC_TZ` defaults to `America/New_York`, so an eastern-US state is likely — but that is a default constant, not a business fact. | ToS §22                    |
+| 4   | The Service is and remains **free**, and treatment fees are billed by the practice outside it. Confirmed by the absence of any billing code.                                           | ToS §16, landing page hero |
+| 5   | Dependents are minors or others for whom the account holder is a parent, guardian, or authorised representative.                                                                       | ToS §6, Privacy §14        |
+| 6   | The practice has, or will have, a separate **Notice of Privacy Practices**. Both pages defer to it for health information.                                                             | ToS §11, Privacy §1        |
+| 7   | Court jurisdiction rather than arbitration, absent instruction.                                                                                                                        | ToS §22                    |
 
 ## B. Open items you must supply
 
@@ -139,8 +139,7 @@ the ToS does not, each with its own evidence:
   Privacy §3 and §10.
 - **The onboarding draft never touches disk.** `draft` is a module-level object
   reset by `resetDraft()` (`apps/mobile/src/components/onboarding.tsx:209-212`)
-  with no AsyncStorage or SecureStore behind it, and it is POSTed once from step
-  4. Privacy §3.
+  with no AsyncStorage or SecureStore behind it, and it is POSTed once from step 4. Privacy §3.
 - **The avatar is the Clerk profile image**, loaded from the identity provider
   rather than stored by us (`apps/mobile/src/components/ui.tsx:391-394`).
   Privacy §2.
