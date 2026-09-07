@@ -1,9 +1,9 @@
-import Image, { type StaticImageData } from 'next/image';
-import Link from 'next/link';
+import Image, { type StaticImageData } from "next/image";
+import Link from "next/link";
 
-import signinHome from '@/assets/app-signin-home.png';
-import signin from '@/assets/app-signin.png';
-import threeScreens from '@/assets/app-three-screens.png';
+import signinHome from "@/assets/app-signin-home.png";
+import signin from "@/assets/app-signin.png";
+import threeScreens from "@/assets/app-three-screens.png";
 
 import {
   CalendarIcon,
@@ -15,8 +15,8 @@ import {
   ToothIcon,
   UsersIcon,
   VideoIcon,
-} from '@/components/icons';
-import { StoreBadges } from '@/components/site-chrome';
+} from "@/components/icons";
+import { StoreBadges } from "@/components/site-chrome";
 
 /**
  * Public landing page.
@@ -40,51 +40,51 @@ import { StoreBadges } from '@/components/site-chrome';
 const FEATURES = [
   {
     icon: <CalendarIcon />,
-    title: 'Book without calling',
-    body: 'See the times the practice actually has open and confirm one. No phone call, no callback, no request sitting in a queue.',
+    title: "Book without calling",
+    body: "See the times the practice actually has open and confirm one. No phone call, no callback, no request sitting in a queue.",
   },
   {
     icon: <VideoIcon />,
-    title: 'Video consultations',
-    body: 'Book a teleconsult and join from your phone five minutes before it starts. For the questions that never needed a drive across town.',
+    title: "Video consultations",
+    body: "Book a teleconsult and join from your phone five minutes before it starts. For the questions that never needed a drive across town.",
   },
   {
     icon: <ChatIcon />,
-    title: 'Message the clinic',
-    body: 'One secure conversation with the practice, with photos when a picture explains it faster. Replies come from the clinic team.',
+    title: "Message the clinic",
+    body: "One secure conversation with the practice, with photos when a picture explains it faster. Replies come from the clinic team.",
   },
   {
     icon: <ClipboardIcon />,
-    title: 'Intake, once',
-    body: 'Allergies, medications and conditions filled in on your phone instead of on a clipboard — and kept current between visits.',
+    title: "Intake, once",
+    body: "Allergies, medications and conditions filled in on your phone instead of on a clipboard — and kept current between visits.",
   },
   {
     icon: <HeartPulseIcon />,
-    title: 'Aftercare that stays put',
-    body: 'Post-op instructions from your visit live in the app. No more calling at 11pm to ask what you were told this morning.',
+    title: "Aftercare that stays put",
+    body: "Post-op instructions from your visit live in the app. No more calling at 11pm to ask what you were told this morning.",
   },
   {
     icon: <UsersIcon />,
-    title: 'The whole household',
-    body: 'Add profiles for your children or anyone in your care, and book for any of them from your own account.',
+    title: "The whole household",
+    body: "Add profiles for your children or anyone in your care, and book for any of them from your own account.",
   },
 ];
 
 const STEPS = [
   {
-    n: '1',
-    title: 'Sign in',
-    body: 'With Apple or Google. No password to invent, and none for us to lose.',
+    n: "1",
+    title: "Sign in",
+    body: "With Apple or Google. No password to invent, and none for us to lose.",
   },
   {
-    n: '2',
-    title: 'Tell us about you',
-    body: 'Four short screens. Medical history is optional and can wait until you have a minute.',
+    n: "2",
+    title: "Tell us about you",
+    body: "Four short screens. Medical history is optional and can wait until you have a minute.",
   },
   {
-    n: '3',
-    title: 'Pick a real time',
-    body: 'Live openings from the practice calendar. Confirm, and it is booked — instantly, no approval step.',
+    n: "3",
+    title: "Pick a real time",
+    body: "Live openings from the practice calendar. Confirm, and it is booked — instantly, no approval step.",
   },
 ];
 
@@ -103,14 +103,16 @@ export default function Landing() {
             <h1 className="mt-6 text-[33px] leading-[1.08] font-bold tracking-[-0.03em] text-navy sm:text-[52px] sm:leading-[1.05] sm:tracking-[-0.035em]">
               Care for your smile,
               <br />
-              without{' '}
-              <span className="whitespace-nowrap text-aqua-ink">the phone call.</span>
+              without{" "}
+              <span className="whitespace-nowrap text-aqua-ink">
+                the phone call.
+              </span>
             </h1>
 
             <p className="mt-6 text-[17.5px] leading-relaxed text-muted">
-              Real appointment times, your medical history, secure messaging with the clinic and
-              video consultations — in one app. Booking, intake and follow-up, without the
-              clipboard.
+              Real appointment times, your medical history, secure messaging
+              with the clinic and video consultations — in one app. Booking,
+              intake and follow-up, without the clipboard.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-3">
@@ -118,7 +120,8 @@ export default function Landing() {
             </div>
 
             <p className="mt-5 text-[13.5px] text-muted">
-              Free to use. Treatment is billed by the practice, never in the app.
+              Free to use. Treatment is billed by the practice, never in the
+              app.
             </p>
           </div>
 
@@ -132,7 +135,10 @@ export default function Landing() {
       </section>
 
       {/* ---------- features ---------- */}
-      <section id="features" className="mx-auto max-w-6xl px-5 pt-24 sm:px-8 sm:pt-32">
+      <section
+        id="features"
+        className="mx-auto max-w-6xl px-5 pt-24 sm:px-8 sm:pt-32"
+      >
         <SectionHeading
           eyebrow="What it does"
           title="The three things the clinic runs on phone calls for"
@@ -148,15 +154,22 @@ export default function Landing() {
               <span className="flex h-11 w-11 items-center justify-center rounded-[14px] bg-powder text-aqua-ink">
                 {f.icon}
               </span>
-              <h3 className="mt-5 text-[17px] font-semibold text-navy">{f.title}</h3>
-              <p className="mt-2.5 text-[14.5px] leading-relaxed text-muted">{f.body}</p>
+              <h3 className="mt-5 text-[17px] font-semibold text-navy">
+                {f.title}
+              </h3>
+              <p className="mt-2.5 text-[14.5px] leading-relaxed text-muted">
+                {f.body}
+              </p>
             </article>
           ))}
         </div>
       </section>
 
       {/* ---------- how it works ---------- */}
-      <section id="how-it-works" className="mx-auto max-w-6xl px-5 pt-24 sm:px-8 sm:pt-32">
+      <section
+        id="how-it-works"
+        className="mx-auto max-w-6xl px-5 pt-24 sm:px-8 sm:pt-32"
+      >
         <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
           <Showcase
             src={threeScreens}
@@ -178,8 +191,12 @@ export default function Landing() {
                     {s.n}
                   </span>
                   <div>
-                    <h3 className="text-[16.5px] font-semibold text-navy">{s.title}</h3>
-                    <p className="mt-1.5 text-[14.5px] leading-relaxed text-muted">{s.body}</p>
+                    <h3 className="text-[16.5px] font-semibold text-navy">
+                      {s.title}
+                    </h3>
+                    <p className="mt-1.5 text-[14.5px] leading-relaxed text-muted">
+                      {s.body}
+                    </p>
                   </div>
                 </li>
               ))}
@@ -198,11 +215,13 @@ export default function Landing() {
               </span>
               <h2 className="mt-5 text-[28px] leading-tight font-bold tracking-tight text-navy">
                 An assistant for the questions
-                <br className="hidden sm:block" /> that are not worth an appointment
+                <br className="hidden sm:block" /> that are not worth an
+                appointment
               </h2>
               <p className="mt-4 max-w-md text-[15.5px] leading-relaxed text-muted">
-                Ask why cold water hurts, how to brush properly, or whether something can wait. You
-                get a plain answer and an offer to book if it should be looked at.
+                Ask why cold water hurts, how to brush properly, or whether
+                something can wait. You get a plain answer and an offer to book
+                if it should be looked at.
               </p>
 
               <div className="mt-7 rounded-[var(--radius-tile)] border border-hairline bg-powder/50 p-5">
@@ -211,10 +230,10 @@ export default function Landing() {
                 </h3>
                 <ul className="mt-3 space-y-2 text-[14.5px] text-navy">
                   {[
-                    'Diagnose you or name a condition as what you have',
-                    'Recommend a medication, a dose or a brand',
-                    'Read an X-ray, a scan or a photo',
-                    'See your records — it has no access to them',
+                    "Diagnose you or name a condition as what you have",
+                    "Recommend a medication, a dose or a brand",
+                    "Read an X-ray, a scan or a photo",
+                    "See your records — it has no access to them",
                   ].map((l) => (
                     <li key={l} className="flex gap-2.5">
                       <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-coral" />
@@ -225,9 +244,10 @@ export default function Landing() {
               </div>
 
               <p className="mt-5 text-[13.5px] leading-relaxed text-muted">
-                It is general dental education, not a diagnosis and not a substitute for
-                professional advice. Ask about swelling, bleeding that will not stop, or trouble
-                breathing and it stops answering and tells you to get emergency care.
+                It is general dental education, not a diagnosis and not a
+                substitute for professional advice. Ask about swelling, bleeding
+                that will not stop, or trouble breathing and it stops answering
+                and tells you to get emergency care.
               </p>
             </div>
 
@@ -247,27 +267,31 @@ export default function Landing() {
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
             <PrivacyPoint title="Photos stay private">
-              Images you upload are stored in a private folder and shown through links that expire.
+              Images you upload are stored in a private folder and shown through
+              links that expire.
             </PrivacyPoint>
             <PrivacyPoint title="The assistant never sees your record">
-              No name, date of birth, medical history or appointment is sent to the AI provider.
+              No name, date of birth, medical history or appointment is sent to
+              the AI provider.
             </PrivacyPoint>
             <PrivacyPoint title="Staff access is logged">
-              Opening a patient record or medical history writes an audit entry — who, and when.
+              Opening a patient record or medical history writes an audit entry
+              — who, and when.
             </PrivacyPoint>
             <PrivacyPoint title="Never sold, never used for ads">
-              Your information is used to run the app and support your care. Nothing else.
+              Your information is used to run the app and support your care.
+              Nothing else.
             </PrivacyPoint>
           </div>
           <p className="text-[13.5px] text-muted lg:col-span-2">
-            Read the{' '}
+            Read the{" "}
             <Link
               href="/privacy"
               className="font-semibold text-aqua-ink underline underline-offset-2"
             >
               Privacy Policy
-            </Link>{' '}
-            and the{' '}
+            </Link>{" "}
+            and the{" "}
             <Link
               href="/terms"
               className="font-semibold text-aqua-ink underline underline-offset-2"
@@ -293,8 +317,8 @@ export default function Landing() {
                 <br className="hidden sm:block" /> is three taps away
               </h2>
               <p className="mt-5 max-w-md text-[16px] leading-relaxed text-muted">
-                Download the app, sign in with Apple or Google, and pick a time that actually
-                exists.
+                Download the app, sign in with Apple or Google, and pick a time
+                that actually exists.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <StoreBadges />
@@ -321,7 +345,7 @@ function Showcase({
   src,
   alt,
   priority,
-  className = '',
+  className = "",
 }: {
   /** A static import — width and height ride along with it. */
   src: StaticImageData;
@@ -359,16 +383,26 @@ function SectionHeading({
       <h2 className="mt-3 text-[26px] leading-tight font-bold tracking-[-0.02em] text-navy sm:text-[36px]">
         {title}
       </h2>
-      {body ? <p className="mt-4 text-[16px] leading-relaxed text-muted">{body}</p> : null}
+      {body ? (
+        <p className="mt-4 text-[16px] leading-relaxed text-muted">{body}</p>
+      ) : null}
     </div>
   );
 }
 
-function PrivacyPoint({ title, children }: { title: string; children: React.ReactNode }) {
+function PrivacyPoint({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="rounded-[var(--radius-tile)] border border-hairline bg-powder/40 p-5">
       <h3 className="text-[14.5px] font-semibold text-navy">{title}</h3>
-      <p className="mt-1.5 text-[13.5px] leading-relaxed text-muted">{children}</p>
+      <p className="mt-1.5 text-[13.5px] leading-relaxed text-muted">
+        {children}
+      </p>
     </div>
   );
 }
@@ -379,10 +413,13 @@ function AssistantPreview() {
     <div className="flex flex-col justify-center gap-3">
       <Bubble mine>Why does my tooth hurt when I drink something cold?</Bubble>
       <Bubble>
-        Cold sensitivity usually comes down to exposed dentine — from worn enamel, a receding gum
-        line, or a small area of decay. On its own it is common and not an emergency.
+        Cold sensitivity usually comes down to exposed dentine — from worn
+        enamel, a receding gum line, or a small area of decay. On its own it is
+        common and not an emergency.
       </Bubble>
-      <Bubble>Would you like to book an appointment so someone can take a look?</Bubble>
+      <Bubble>
+        Would you like to book an appointment so someone can take a look?
+      </Bubble>
       <p className="mt-2 px-1 text-[12.5px] leading-relaxed text-muted">
         Example only. For educational purposes, not medical advice.
       </p>
@@ -390,13 +427,19 @@ function AssistantPreview() {
   );
 }
 
-function Bubble({ children, mine }: { children: React.ReactNode; mine?: boolean }) {
+function Bubble({
+  children,
+  mine,
+}: {
+  children: React.ReactNode;
+  mine?: boolean;
+}) {
   return (
     <div
       className={
         mine
-          ? 'ml-auto max-w-[85%] rounded-[18px] rounded-br-[6px] bg-powder px-4 py-3 text-[14px] leading-relaxed text-navy'
-          : 'mr-auto max-w-[90%] rounded-[18px] rounded-bl-[6px] border border-hairline bg-white px-4 py-3 text-[14px] leading-relaxed text-navy'
+          ? "ml-auto max-w-[85%] rounded-[18px] rounded-br-[6px] bg-powder px-4 py-3 text-[14px] leading-relaxed text-navy"
+          : "mr-auto max-w-[90%] rounded-[18px] rounded-bl-[6px] border border-hairline bg-white px-4 py-3 text-[14px] leading-relaxed text-navy"
       }
     >
       {children}

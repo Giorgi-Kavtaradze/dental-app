@@ -1,19 +1,19 @@
-import { asc, count, eq } from 'drizzle-orm';
-import Link from 'next/link';
+import { asc, count, eq } from "drizzle-orm";
+import Link from "next/link";
 
-import { UsersIcon } from '@/components/icons';
-import { Card, EmptyState, StatTile } from '@/components/ui';
-import { db } from '@/db';
-import { appointments, patients, users } from '@/db/schema';
-import { audit } from '@/lib/audit';
-import { requireStaff } from '@/lib/auth';
-import { formatClinicDate } from '@/lib/time';
+import { UsersIcon } from "@/components/icons";
+import { Card, EmptyState, StatTile } from "@/components/ui";
+import { db } from "@/db";
+import { appointments, patients, users } from "@/db/schema";
+import { audit } from "@/lib/audit";
+import { requireStaff } from "@/lib/auth";
+import { formatClinicDate } from "@/lib/time";
 
 export default async function PatientsPage() {
   const staff = await requireStaff();
 
   // A roster read is still a read of the patients table.
-  await audit(staff.id, 'read', 'patients', null);
+  await audit(staff.id, "read", "patients", null);
 
   const rows = await db
     .select({
@@ -38,7 +38,9 @@ export default async function PatientsPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-[32px] font-bold tracking-tight text-navy">Patients</h1>
+        <h1 className="text-[32px] font-bold tracking-tight text-navy">
+          Patients
+        </h1>
         <p className="mt-1 text-[14px] text-muted">
           Everyone registered with the clinic, including dependents.
         </p>
@@ -48,12 +50,12 @@ export default async function PatientsPage() {
         <StatTile
           icon={<UsersIcon width={22} height={22} />}
           value={rows.length}
-          label={rows.length === 1 ? 'Patient' : 'Patients'}
+          label={rows.length === 1 ? "Patient" : "Patients"}
         />
         <StatTile
           icon={<UsersIcon width={22} height={22} />}
           value={households}
-          label={households === 1 ? 'Household' : 'Households'}
+          label={households === 1 ? "Household" : "Households"}
         />
         <StatTile
           icon={<UsersIcon width={22} height={22} />}
@@ -95,11 +97,15 @@ export default async function PatientsPage() {
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 tabular-nums text-muted">{r.dateOfBirth ?? '—'}</td>
-                    <td className="px-6 py-4 text-muted">{r.phone ?? '—'}</td>
-                    <td className="px-6 py-4 tabular-nums text-muted">{r.visits}</td>
+                    <td className="px-6 py-4 tabular-nums text-muted">
+                      {r.dateOfBirth ?? "—"}
+                    </td>
+                    <td className="px-6 py-4 text-muted">{r.phone ?? "—"}</td>
+                    <td className="px-6 py-4 tabular-nums text-muted">
+                      {r.visits}
+                    </td>
                     <td className="px-6 py-4 text-muted">
-                      {r.lastVisitAt ? formatClinicDate(r.lastVisitAt) : '—'}
+                      {r.lastVisitAt ? formatClinicDate(r.lastVisitAt) : "—"}
                     </td>
                   </tr>
                 ))}

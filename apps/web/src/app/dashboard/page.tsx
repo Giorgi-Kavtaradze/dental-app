@@ -1,5 +1,5 @@
-import { and, asc, eq, gte, lt } from 'drizzle-orm';
-import Link from 'next/link';
+import { and, asc, eq, gte, lt } from "drizzle-orm";
+import Link from "next/link";
 
 import {
   CalendarIcon,
@@ -7,19 +7,33 @@ import {
   ChevronRightIcon,
   ToothIcon,
   VideoIcon,
-} from '@/components/icons';
-import { Avatar, Card, EmptyState, StatTile, StatusPill } from '@/components/ui';
-import { db } from '@/db';
-import { appointments, dentists, patients, services } from '@/db/schema';
-import { requireStaff } from '@/lib/auth';
-import { clinicDayOf, clinicInstant, formatClinicDate, formatClinicTime, parseDay } from '@/lib/time';
+} from "@/components/icons";
+import {
+  Avatar,
+  Card,
+  EmptyState,
+  StatTile,
+  StatusPill,
+} from "@/components/ui";
+import { db } from "@/db";
+import { appointments, dentists, patients, services } from "@/db/schema";
+import { requireStaff } from "@/lib/auth";
+import {
+  clinicDayOf,
+  clinicInstant,
+  formatClinicDate,
+  formatClinicTime,
+  parseDay,
+} from "@/lib/time";
 
 /** Server Component hitting Drizzle directly — no HTTP hop (PLAN.md architecture). */
-export default async function DashboardPage({ searchParams }: PageProps<'/dashboard'>) {
+export default async function DashboardPage({
+  searchParams,
+}: PageProps<"/dashboard">) {
   await requireStaff();
 
   const params = await searchParams;
-  const dateParam = typeof params.date === 'string' ? params.date : undefined;
+  const dateParam = typeof params.date === "string" ? params.date : undefined;
   const day = dateParam ? parseDay(dateParam) : clinicDayOf(new Date());
 
   const dayStart = clinicInstant(day, 0, 0);
@@ -42,7 +56,12 @@ export default async function DashboardPage({ searchParams }: PageProps<'/dashbo
     .innerJoin(patients, eq(patients.id, appointments.patientId))
     .innerJoin(dentists, eq(dentists.id, appointments.dentistId))
     .innerJoin(services, eq(services.id, appointments.serviceId))
-    .where(and(gte(appointments.startsAt, dayStart), lt(appointments.startsAt, dayEnd)))
+    .where(
+      and(
+        gte(appointments.startsAt, dayStart),
+        lt(appointments.startsAt, dayEnd),
+      ),
+    )
     .orderBy(asc(appointments.startsAt), asc(dentists.displayName));
 
   const dentistCount = new Set(rows.map((r) => r.dentist)).size;
@@ -61,7 +80,9 @@ export default async function DashboardPage({ searchParams }: PageProps<'/dashbo
           <h1 className="text-[32px] font-bold tracking-tight text-navy">
             {formatClinicDate(clinicInstant(day, 12, 0))}
           </h1>
-          <p className="mt-1 text-[14px] text-muted">Every dentist, in clinic time.</p>
+          <p className="mt-1 text-[14px] text-muted">
+            Every dentist, in clinic time.
+          </p>
         </div>
 
         <nav className="flex items-center gap-2.5">
@@ -86,17 +107,17 @@ export default async function DashboardPage({ searchParams }: PageProps<'/dashbo
         <StatTile
           icon={<CalendarIcon width={22} height={22} />}
           value={rows.length}
-          label={rows.length === 1 ? 'Appointment' : 'Appointments'}
+          label={rows.length === 1 ? "Appointment" : "Appointments"}
         />
         <StatTile
           icon={<ToothIcon width={22} height={22} />}
           value={dentistCount}
-          label={dentistCount === 1 ? 'Dentist' : 'Dentists'}
+          label={dentistCount === 1 ? "Dentist" : "Dentists"}
         />
         <StatTile
           icon={<VideoIcon width={22} height={22} />}
           value={teleconsults}
-          label={teleconsults === 1 ? 'Teleconsult' : 'Teleconsults'}
+          label={teleconsults === 1 ? "Teleconsult" : "Teleconsults"}
         />
       </div>
 
@@ -134,12 +155,22 @@ export default async function DashboardPage({ searchParams }: PageProps<'/dashbo
                     <td className="px-6 py-5 text-muted">{r.service}</td>
                     <td className="px-6 py-5">
                       <span className="flex items-center gap-2.5 text-muted">
-                        <Avatar src={r.dentistPhoto} name={r.dentist} size={30} />
+                        <Avatar
+                          src={r.dentistPhoto}
+                          name={r.dentist}
+                          size={30}
+                        />
                         {r.dentist}
                       </span>
                     </td>
                     <td className="px-6 py-5">
-                      <StatusPill status={r.isTeleconsult && r.status === 'booked' ? 'video' : r.status} />
+                      <StatusPill
+                        status={
+                          r.isTeleconsult && r.status === "booked"
+                            ? "video"
+                            : r.status
+                        }
+                      />
                     </td>
                   </tr>
                 ))}
@@ -152,7 +183,13 @@ export default async function DashboardPage({ searchParams }: PageProps<'/dashbo
   );
 }
 
-function PillLink({ href, children }: { href: string; children: React.ReactNode }) {
+function PillLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
   return (
     <Link
       href={href}

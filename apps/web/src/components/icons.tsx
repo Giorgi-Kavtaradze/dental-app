@@ -1,4 +1,4 @@
-import type { SVGProps } from 'react';
+import type { SVGProps } from "react";
 
 /**
  * Inline line icons at the design system's 24px / 1.5px-stroke spec.
@@ -7,12 +7,12 @@ import type { SVGProps } from 'react';
 const base = (props: SVGProps<SVGSVGElement>) => ({
   width: 20,
   height: 20,
-  viewBox: '0 0 24 24',
-  fill: 'none',
-  stroke: 'currentColor',
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
   strokeWidth: 1.6,
-  strokeLinecap: 'round' as const,
-  strokeLinejoin: 'round' as const,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
   ...props,
 });
 
@@ -109,7 +109,14 @@ export const LogoutIcon = (p: SVGProps<SVGSVGElement>) => (
 export const LogoMark = ({ size = 40 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden>
     <defs>
-      <linearGradient id="dc-shield" x1="24" y1="3" x2="24" y2="45" gradientUnits="userSpaceOnUse">
+      <linearGradient
+        id="dc-shield"
+        x1="24"
+        y1="3"
+        x2="24"
+        y2="45"
+        gradientUnits="userSpaceOnUse"
+      >
         <stop stopColor="#8AF5FF" />
         <stop offset="1" stopColor="#24D4DF" />
       </linearGradient>

@@ -1,20 +1,22 @@
-import { SignOutButton, UserButton } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
-import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { SignOutButton, UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
-import { LogoMark, LogoutIcon } from '@/components/icons';
-import { SidebarNav } from '@/components/sidebar-nav';
-import { requireStaff } from '@/lib/auth';
-import { ApiError } from '@/lib/http';
+import { LogoMark, LogoutIcon } from "@/components/icons";
+import { SidebarNav } from "@/components/sidebar-nav";
+import { requireStaff } from "@/lib/auth";
+import { ApiError } from "@/lib/http";
 
 /**
  * The dashboard's guard lives here rather than in proxy.ts — a resource-based
  * check, next to the data it protects.
  */
-export default async function DashboardLayout({ children }: LayoutProps<'/dashboard'>) {
+export default async function DashboardLayout({
+  children,
+}: LayoutProps<"/dashboard">) {
   const { userId } = await auth();
-  if (!userId) redirect('/');
+  if (!userId) redirect("/");
 
   try {
     await requireStaff();
@@ -27,7 +29,10 @@ export default async function DashboardLayout({ children }: LayoutProps<'/dashbo
     <div className="min-h-screen lg:pl-62">
       {/* Fixed rail, flush to the left edge of the viewport. */}
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-62 flex-col border-r border-hairline bg-white px-5 py-6 lg:flex">
-        <Link href="/dashboard" className="flex flex-col items-center gap-2 py-2">
+        <Link
+          href="/dashboard"
+          className="flex flex-col items-center gap-2 py-2"
+        >
           <LogoMark size={44} />
           <span className="text-[22px] font-bold tracking-tight text-navy">
             Denta<span className="text-aqua">Care</span>
@@ -59,12 +64,15 @@ function NotStaff() {
         <div className="mx-auto w-fit">
           <LogoMark size={52} />
         </div>
-        <h1 className="mt-4 text-[26px] font-bold tracking-tight text-navy">Staff access only</h1>
+        <h1 className="mt-4 text-[26px] font-bold tracking-tight text-navy">
+          Staff access only
+        </h1>
         <p className="mt-3 text-[15px] leading-relaxed text-muted">
-          This account is not a staff member. An admin can grant access by setting{' '}
+          This account is not a staff member. An admin can grant access by
+          setting{" "}
           <code className="rounded bg-powder px-1.5 py-0.5 text-[13px] text-aqua-ink">
             {'{ "role": "staff" }'}
-          </code>{' '}
+          </code>{" "}
           in the user&apos;s public metadata in the Clerk dashboard.
         </p>
         <div className="mt-6 flex items-center justify-center gap-4">

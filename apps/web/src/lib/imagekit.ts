@@ -1,6 +1,6 @@
-import ImageKit from 'imagekit';
+import ImageKit from "imagekit";
 
-import { ApiError, badRequest } from './http';
+import { ApiError, badRequest } from "./http";
 
 /**
  * Patient photos are PRIVATE on ImageKit (PLAN.md §1 HIPAA posture): the stored
@@ -17,7 +17,8 @@ import { ApiError, badRequest } from './http';
 export const photoFolder = (userId: string) => `/patient-uploads/ai/${userId}`;
 
 /** X-rays and documents attached while booking. Private, same as the above. */
-export const attachmentFolder = (userId: string) => `/patient-uploads/appointments/${userId}`;
+export const attachmentFolder = (userId: string) =>
+  `/patient-uploads/appointments/${userId}`;
 
 /**
  * Delivery URLs are minted fresh on every read, so this only has to outlive a
@@ -30,9 +31,14 @@ let client: ImageKit | null = null;
 export function imagekit(): ImageKit {
   if (client) return client;
 
-  const { IMAGEKIT_PUBLIC_KEY, IMAGEKIT_PRIVATE_KEY, IMAGEKIT_URL_ENDPOINT } = process.env;
+  const { IMAGEKIT_PUBLIC_KEY, IMAGEKIT_PRIVATE_KEY, IMAGEKIT_URL_ENDPOINT } =
+    process.env;
   if (!IMAGEKIT_PUBLIC_KEY || !IMAGEKIT_PRIVATE_KEY || !IMAGEKIT_URL_ENDPOINT) {
-    throw new ApiError(503, 'Photo upload is not configured yet.', 'imagekit_unconfigured');
+    throw new ApiError(
+      503,
+      "Photo upload is not configured yet.",
+      "imagekit_unconfigured",
+    );
   }
 
   client = new ImageKit({
@@ -58,11 +64,16 @@ export type SignedPhoto = { blurred: string; full: string };
 export function signedPhoto(path: string): SignedPhoto {
   const ik = imagekit();
   const sign = (transformation: Record<string, string>[]) =>
-    ik.url({ path, transformation, signed: true, expireSeconds: URL_TTL_SECONDS });
+    ik.url({
+      path,
+      transformation,
+      signed: true,
+      expireSeconds: URL_TTL_SECONDS,
+    });
 
   return {
-    blurred: sign([{ width: '400', blur: '40' }]),
-    full: sign([{ width: '1200' }]),
+    blurred: sign([{ width: "400", blur: "40" }]),
+    full: sign([{ width: "1200" }]),
   };
 }
 
@@ -71,10 +82,10 @@ const MAX_BYTES = 4 * 1024 * 1024;
 
 /** Extension comes from the declared type, never from the client's filename. */
 const TYPES: Record<string, string> = {
-  'image/jpeg': 'jpg',
-  'image/png': 'png',
-  'image/webp': 'webp',
-  'image/heic': 'heic',
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/heic": "heic",
 };
 
 /**
@@ -90,13 +101,16 @@ const TYPES: Record<string, string> = {
  * ours to set. `useUniqueFileName` means the client never influences the stored
  * path, so there is nothing to traverse and nothing to overwrite.
  */
-export async function uploadPrivateImage(file: unknown, folder: string): Promise<string> {
-  if (!(file instanceof File)) throw badRequest('No photo attached');
+export async function uploadPrivateImage(
+  file: unknown,
+  folder: string,
+): Promise<string> {
+  if (!(file instanceof File)) throw badRequest("No photo attached");
 
   const ext = TYPES[file.type];
-  if (!ext) throw badRequest('That file type is not supported — send a photo.');
-  if (file.size === 0) throw badRequest('That photo is empty.');
-  if (file.size > MAX_BYTES) throw badRequest('That photo is too large.');
+  if (!ext) throw badRequest("That file type is not supported — send a photo.");
+  if (file.size === 0) throw badRequest("That photo is empty.");
+  if (file.size > MAX_BYTES) throw badRequest("That photo is too large.");
 
   const uploaded = await imagekit().upload({
     file: Buffer.from(await file.arrayBuffer()),
@@ -119,7 +133,7 @@ export async function uploadPrivateImage(file: unknown, folder: string): Promise
  * `bw` is the resized image, not the original upload.
  */
 const BRAND =
-  'l-text,i-Dentify,fs-bw_div_25,co-FFFFFF,bg-0A254075,pa-10_18,r-10,lx-N24,ly-24,lap-top_right,l-end';
+  "l-text,i-Dentify,fs-bw_div_25,co-FFFFFF,bg-0A254075,pa-10_18,r-10,lx-N24,ly-24,lap-top_right,l-end";
 
 export type SignedAttachment = { thumb: string; full: string };
 
@@ -133,5 +147,5 @@ export function signedAttachment(path: string): SignedAttachment {
       expireSeconds: URL_TTL_SECONDS,
     });
 
-  return { thumb: sign('400'), full: sign('1400') };
+  return { thumb: sign("400"), full: sign("1400") };
 }

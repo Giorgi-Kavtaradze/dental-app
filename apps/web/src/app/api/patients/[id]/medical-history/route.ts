@@ -1,10 +1,10 @@
-import { eq } from 'drizzle-orm';
+import { eq } from "drizzle-orm";
 
-import { db } from '@/db';
-import { medicalHistories } from '@/db/schema';
-import { requireAuth, requireOwnedPatient } from '@/lib/auth';
-import { json, route } from '@/lib/http';
-import { medicalHistorySchema } from '@/lib/validation';
+import { db } from "@/db";
+import { medicalHistories } from "@/db/schema";
+import { requireAuth, requireOwnedPatient } from "@/lib/auth";
+import { json, route } from "@/lib/http";
+import { medicalHistorySchema } from "@/lib/validation";
 
 type Ctx = { params: Promise<{ id: string }> };
 

@@ -1,16 +1,32 @@
-import { and, asc, desc, eq, gte, inArray, lt } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, lt } from "drizzle-orm";
 
-import { db } from '@/db';
-import { appointments, dentists, patients, services, visitNotes } from '@/db/schema';
-import { requireAuth, requireOwnedPatient } from '@/lib/auth';
-import { assertSlotBookable } from '@/lib/booking';
-import { conflict, json, notFound, route, isExclusionViolation } from '@/lib/http';
-import { serialize } from '@/lib/appointments';
-import { createAppointmentSchema } from '@/lib/validation';
+import { db } from "@/db";
+import {
+  appointments,
+  dentists,
+  patients,
+  services,
+  visitNotes,
+} from "@/db/schema";
+import { requireAuth, requireOwnedPatient } from "@/lib/auth";
+import { assertSlotBookable } from "@/lib/booking";
+import {
+  conflict,
+  json,
+  notFound,
+  route,
+  isExclusionViolation,
+} from "@/lib/http";
+import { serialize } from "@/lib/appointments";
+import { createAppointmentSchema } from "@/lib/validation";
 
 const selection = {
   appointment: appointments,
-  patient: { id: patients.id, firstName: patients.firstName, lastName: patients.lastName },
+  patient: {
+    id: patients.id,
+    firstName: patients.firstName,
+    lastName: patients.lastName,
+  },
   dentist: {
     id: dentists.id,
     displayName: dentists.displayName,
@@ -30,7 +46,8 @@ const selection = {
 /** GET /api/appointments?scope=upcoming|past — across the whole family. */
 export const GET = route(async (req: Request) => {
   const user = await requireAuth();
-  const scope = new URL(req.url).searchParams.get('scope') === 'past' ? 'past' : 'upcoming';
+  const scope =
+    new URL(req.url).searchParams.get("scope") === "past" ? "past" : "upcoming";
 
   const family = await db
     .select({ id: patients.id })
@@ -50,22 +67,34 @@ export const GET = route(async (req: Request) => {
     .where(
       and(
         inArray(appointments.patientId, familyIds),
-        scope === 'upcoming'
-          ? and(gte(appointments.startsAt, now), eq(appointments.status, 'booked'))
-          : lt(appointments.startsAt, now)
-      )
+        scope === "upcoming"
+          ? and(
+              gte(appointments.startsAt, now),
+              eq(appointments.status, "booked"),
+            )
+          : lt(appointments.startsAt, now),
+      ),
     )
-    .orderBy(scope === 'upcoming' ? asc(appointments.startsAt) : desc(appointments.startsAt))
+    .orderBy(
+      scope === "upcoming"
+        ? asc(appointments.startsAt)
+        : desc(appointments.startsAt),
+    )
     .limit(100);
 
   // Post-op instructions ride along with past visits — that is the whole
   // point of the visit history screen.
   const notes =
-    scope === 'past' && rows.length
+    scope === "past" && rows.length
       ? await db
           .select()
           .from(visitNotes)
-          .where(inArray(visitNotes.appointmentId, rows.map((r) => r.appointment.id)))
+          .where(
+            inArray(
+              visitNotes.appointmentId,
+              rows.map((r) => r.appointment.id),
+            ),
+          )
       : [];
 
   return json({
@@ -73,7 +102,11 @@ export const GET = route(async (req: Request) => {
       ...serialize(r),
       notes: notes
         .filter((n) => n.appointmentId === r.appointment.id)
-        .map((n) => ({ id: n.id, body: n.body, createdAt: n.createdAt.toISOString() })),
+        .map((n) => ({
+          id: n.id,
+          body: n.body,
+          createdAt: n.createdAt.toISOString(),
+        })),
     })),
   });
 });
@@ -89,17 +122,22 @@ export const POST = route(async (req: Request) => {
 
   const patient = await requireOwnedPatient(user, body.patientId);
 
-  const [service] = await db.select().from(services).where(eq(services.id, body.serviceId));
-  if (!service || !service.isActive) throw notFound('Service not found');
+  const [service] = await db
+    .select()
+    .from(services)
+    .where(eq(services.id, body.serviceId));
+  if (!service || !service.isActive) throw notFound("Service not found");
 
   const [dentist] = await db
     .select()
     .from(dentists)
     .where(and(eq(dentists.id, body.dentistId), eq(dentists.isActive, true)));
-  if (!dentist) throw notFound('Dentist not found');
+  if (!dentist) throw notFound("Dentist not found");
 
   const startsAt = new Date(body.startsAt);
-  const endsAt = new Date(startsAt.getTime() + service.durationMinutes * 60_000);
+  const endsAt = new Date(
+    startsAt.getTime() + service.durationMinutes * 60_000,
+  );
 
   // The client never gets to invent a time: this re-runs the same engine that
   // produced the slot list and rejects anything it would not have offered.
@@ -135,7 +173,11 @@ export const POST = route(async (req: Request) => {
       {
         appointment: serialize({
           appointment: created,
-          patient: { id: patient.id, firstName: patient.firstName, lastName: patient.lastName },
+          patient: {
+            id: patient.id,
+            firstName: patient.firstName,
+            lastName: patient.lastName,
+          },
           dentist: {
             id: dentist.id,
             displayName: dentist.displayName,
@@ -146,11 +188,14 @@ export const POST = route(async (req: Request) => {
           service,
         }),
       },
-      201
+      201,
     );
   } catch (err) {
     if (isExclusionViolation(err)) {
-      throw conflict('That time was just taken. Please pick another.', 'slot_taken');
+      throw conflict(
+        "That time was just taken. Please pick another.",
+        "slot_taken",
+      );
     }
     throw err;
   }
