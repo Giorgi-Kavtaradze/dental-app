@@ -162,3 +162,7 @@
     border-top: 1px solid var(--color-hairline);
   }
 }
+  ::view-transition-old(root), ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
